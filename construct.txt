@@ -1,0 +1,16 @@
+my_project/
+└──MARS/
+   ├── all_mini_direct/
+   │     ├──train_split_ReSNet_pkl/
+   │     ├──gallery_split_ReSNet_pkl/
+   │     ├──query_split_ReSNet_pkl/
+   ├── bbox_test/
+   │     ├──bbox_test/
+   │     ├──gallery_files.txt
+   │     ├──gallery_skipped_files.txt
+   │     ├──query_files.txt
+   │     ├──query_IDX.mat
+   │     ├──test_name.txt
+   │     ├──tracks_test_info.mat
+   ├── bbox_train/
+   　     └──bbox_train/
