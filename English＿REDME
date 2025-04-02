@@ -1,0 +1,86 @@
+# Human_ReID_HITL
+
+This project focuses on improving the accuracy of Person Re-Identification (ReID) for estimating pedestrian origin-destination (OD) from multi-camera surveillance images. We propose a Human-in-the-Loop (HITL) annotation framework that enhances ReID through iterative model refinement using human feedback.
+
+The framework consists of three main stages:
+
+1. **Initial feature extraction** using a pretrained ReID model.
+2. **Candidate selection and manual annotation** to refine labels.
+3. **Model retraining** using newly annotated data.
+
+We validate the effectiveness of the HITL-based annotation process using the [MARS dataset](https://github.com/liangzheng06/MARS).
+
+---
+
+## 📁 Directory Structure
+my_project/
+└──MARS/
+   ├── all_mini_direct/
+   │     ├──train_split_ReSNet_pkl/
+   │     ├──gallery_split_ReSNet_pkl/
+   │     ├──query_split_ReSNet_pkl/
+   ├── bbox_test/
+   │     ├──bbox_test/
+   │     ├──gallery_files.txt
+   │     ├──gallery_skipped_files.txt
+   │     ├──query_files.txt
+   │     ├──query_IDX.mat
+   │     ├──test_name.txt
+   │     ├──tracks_test_info.mat
+   ├── bbox_train/
+   　     └──bbox_train/
+
+
+> Please place the MARS dataset's `bbox_test` and `bbox_train` image folders directly under the corresponding folders shown above.
+
+---
+
+## 📄 File Descriptions
+
+### `MARS_deal.ipynb`
+
+This notebook extracts appearance features from train, gallery, and query images using a pretrained **ResNet-50** model (trained on MSMT17).
+
+- `pid=0` or `pid=-1` are excluded as these represent background or invalid individuals.
+- To handle memory limitations, the extracted features are saved in small chunks (`.pkl` files).
+
+---
+
+### `train_predict.ipynb`
+
+This notebook fine-tunes the extracted features to better identify a selected group of **7 individuals (tracklets)** and then searches for them in a larger dataset.
+
+- Machine learning is implemented in **PyTorch**.
+- A customized `ArcFaceLoss` (from `pytorch_metric_learning`) is used, applying class-based weighting to address imbalanced data.
+- The human annotation process is **simulated** by referencing ground truth labels internally (this would typically be done manually in a real HITL setup).
+- The model is retrained iteratively with new samples.
+
+---
+
+## ⚠️ Known Issues & Future Work
+
+- **Duplicate PIDs in Selection**: The current simulation assumes no duplicate PIDs among the 7 selected tracklets. This is not realistic in real-world applications and needs a solution.
+- **Selection Strategy**: It's unclear whether selecting 7 tracklets is optimal. Should more be selected? Should we prioritize diversity or similarity in selection? This requires further investigation.
+- **Model Reinitialization**: The model's fully connected layer is reinitialized in each iteration. The impact of this versus retaining previous weights needs to be evaluated.
+- **Model Ensemble**: Currently, each model is evaluated independently. Using ensemble strategies across multiple HITL-trained models may improve final ReID accuracy.
+
+---
+
+## 🧪 Dataset
+
+- **MARS Dataset**: Please refer to the original [MARS GitHub repo](https://github.com/liangzheng06/MARS) for dataset details.
+
+---
+
+## 🛠️ Environment
+
+- Python ≥ 3.8
+- PyTorch ≥ 1.10
+- torchvision
+- scipy
+- PIL
+- `pytorch_metric_learning` (for ArcFaceLoss)
+
+---
+
+Let me know if you'd like a Japanese version of this README as well!
